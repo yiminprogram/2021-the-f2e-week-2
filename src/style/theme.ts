@@ -69,6 +69,8 @@ const theme = createTheme({
         root: {
           color: primary.main,
           boxShadow: 'none',
+        },
+        contained: {
           backgroundColor: '#ffffff',
           border: '1px solid #A4B375',
           borderRadius: '8px',
