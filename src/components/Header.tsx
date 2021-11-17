@@ -1,4 +1,4 @@
-import { Button, Stack, AppBar, styled } from '@mui/material';
+import { Button, Stack, styled } from '@mui/material';
 import logoLight from '../assets/logo/logo-light.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
