@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import UserPosition from './views/UserPosition';
 import Home from './views/Home';
 
 const Container = styled('div')`
@@ -22,8 +21,7 @@ const App = () => {
       <Header />
       <Page>
         <Routes>
-          <Route path="/" element={<UserPosition />} />
-          <Route path="map" element={<Home />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </Page>
     </Container>

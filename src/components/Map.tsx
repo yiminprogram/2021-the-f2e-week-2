@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { styled } from '@mui/material';
+import { styled, Box, Button } from '@mui/material';
 import L from 'leaflet';
+import 'leaflet.markercluster';
 import 'leaflet/dist/leaflet.css';
-import iconImage from '../assets/icon/user-position.svg';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import UserMark from '../components/UserMark';
 import BikeMark from '../components/BikeMark';
-import { getPosition, getQueryString } from '../utils';
+import ClusterMark from './ClusterMark';
+import { getQueryString, getPosition, getBikeStation } from '../utils';
 
 const OpenStreetMap = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -39,6 +42,15 @@ const UserIcon = L.divIcon({
   html: renderToString(<UserMark />),
 });
 
+const BikeIcon = (quantity: number) => {
+  return L.divIcon({
+    className: 'bike-icon',
+    iconSize: [48, 67],
+    iconAnchor: [19, 28.5],
+    html: renderToString(<BikeMark quantity={quantity} />),
+  });
+};
+
 const Map = () => {
   // router
   const location = useLocation();
@@ -51,57 +63,85 @@ const Map = () => {
 
   // map state
   const mapRef = useRef<L.Map>();
-  const curRef = useRef<L.Marker>();
 
+  // map first render
   useEffect(() => {
+    // leaflet create map (current position)
     const map = L.map('map', { zoomControl: false });
     L.tileLayer(OSMUrl, { attribution }).addTo(map);
-    mapRef.current = map;
-    console.log('first value');
+    map.setZoom(17);
+    getPosition().then((res) => {
+      map.setView([res.coords.latitude, res.coords.longitude], 17);
+      L.marker([res.coords.latitude, res.coords.longitude], {
+        icon: UserIcon,
+      }).addTo(map);
+      // Bike station marker
+      const markers = L.markerClusterGroup({
+        iconCreateFunction: (cluster) => {
+          return L.divIcon({
+            className: 'cluster-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+            html: renderToString(
+              <ClusterMark count={cluster.getChildCount()} />,
+            ),
+          });
+        },
+      });
+      getBikeStation(res.coords.latitude, res.coords.longitude).then((res) => {
+        res.forEach((ele) => {
+          markers.addLayer(
+            L.marker([ele.lat, ele.lng], { icon: BikeIcon(16) }),
+          );
+        });
+      });
+      map.addLayer(markers);
+    });
 
+    // get map center position
+    const getMapCenter = () => {
+      return setTimeout(() => {
+        navigation({
+          search: getQueryString({
+            lat: map.getCenter().lat,
+            lng: map.getCenter().lng,
+            zoom: map.getZoom(),
+          }),
+        });
+      }, 500);
+    };
+
+    // control map event
     let timer: NodeJS.Timeout;
-
     map.on('zoom', () => {
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        navigation({
-          search: getQueryString({
-            lat: map.getCenter().lat,
-            lng: map.getCenter().lng,
-            zoom: map.getZoom(),
-          }),
-        });
-      }, 500);
+      timer = getMapCenter();
     });
-
     map.on('drag', () => {
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        console.log('drag');
-        navigation({
-          search: getQueryString({
-            lat: map.getCenter().lat,
-            lng: map.getCenter().lng,
-            zoom: map.getZoom(),
-          }),
-        });
-      }, 500);
+      timer = getMapCenter();
     });
+
+    mapRef.current = map;
   }, []);
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-    console.log('set view');
-    mapRef.current.setView([lat, lng], zoom);
-    if (curRef.current) {
-      curRef.current.setLatLng([lat, lng]);
-    } else {
-      curRef.current = L.marker([lat, lng], { icon: UserIcon });
-      curRef.current.addTo(mapRef.current);
-    }
-  }, [lat, lng, zoom]);
-
-  return <OpenStreetMap id="map"></OpenStreetMap>;
+  return (
+    <>
+      <Box
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          bottom: '5%',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <Button variant="contained" size="large">
+          搜尋此區域
+        </Button>
+      </Box>
+      <OpenStreetMap id="map"></OpenStreetMap>{' '}
+    </>
+  );
 };
 
 export default Map;

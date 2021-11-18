@@ -8,8 +8,8 @@ const BikeMark = ({ quantity }: TProps) => {
   return (
     <Box sx={{ position: 'relative' }}>
       <svg
-        width="58"
-        height="77"
+        width="100%"
+        height="100%"
         viewBox="0 0 58 77"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -28,8 +28,9 @@ const BikeMark = ({ quantity }: TProps) => {
         <circle cx="29" cy="29" r="19" fill="white" />
       </svg>
       <Typography
-        variant="h5"
+        component="span"
         sx={{
+          fontSize: '1rem',
           color: quantity > 5 ? '#738047' : '#E75578',
           position: 'absolute',
           left: '50%',
