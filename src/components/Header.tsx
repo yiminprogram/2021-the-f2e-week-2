@@ -6,6 +6,7 @@ import {
   faRoute,
   faUmbrellaBeach,
 } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderBar = styled('header')`
   height: 76px;
@@ -32,6 +33,10 @@ const Navbar = styled('nav')`
 `;
 
 const Header = () => {
+  const nav = useNavigate();
+  const click = () => {
+    nav({ pathname: 'map', search: 'abc' });
+  };
   return (
     <HeaderBar>
       <Logo>
@@ -40,6 +45,7 @@ const Header = () => {
       <Navbar>
         <Stack direction="row" justifyContent="end" spacing={3}>
           <Button
+            onClick={click}
             variant="contained"
             startIcon={<FontAwesomeIcon icon={faBicycle} />}
           >

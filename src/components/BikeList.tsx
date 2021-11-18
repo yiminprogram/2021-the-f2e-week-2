@@ -1,5 +1,5 @@
 import { useState, MouseEvent } from 'react';
-import { Stack, Button, styled, Menu, MenuItem, Fab, Box } from '@mui/material';
+import { Stack, Button, styled, Menu, MenuItem } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSearch,

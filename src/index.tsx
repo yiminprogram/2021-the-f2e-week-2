@@ -5,12 +5,15 @@ import { Global } from '@emotion/react';
 import { ThemeProvider } from '@mui/material/styles';
 import global from './style/global';
 import theme from './style/theme';
+import { HashRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Global styles={global} />
-      <App />
+      <HashRouter>
+        <Global styles={global} />
+        <App />
+      </HashRouter>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root'),

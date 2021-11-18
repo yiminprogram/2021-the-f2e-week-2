@@ -1,30 +1,32 @@
 import { styled } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Map from './components/Map';
-import BikeList from './components/BikeList';
-import { Grid } from '@mui/material';
+import UserPosition from './views/UserPosition';
+import Home from './views/Home';
 
-const Page = styled('div')`
+const Container = styled('div')`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   position: relative;
 `;
 
-const MainPage = styled('section')`
+const Page = styled('section')`
   position: relative;
   height: calc(100vh - 76px);
 `;
 
 const App = () => {
   return (
-    <Page>
+    <Container>
       <Header />
-      <MainPage>
-        <Map />
-        <BikeList />
-      </MainPage>
-    </Page>
+      <Page>
+        <Routes>
+          <Route path="/" element={<UserPosition />} />
+          <Route path="map" element={<Home />} />
+        </Routes>
+      </Page>
+    </Container>
   );
 };
 
