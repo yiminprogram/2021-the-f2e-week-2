@@ -10,6 +10,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import UserMark from '../components/UserMark';
 import BikeMark from '../components/BikeMark';
 import ClusterMark from './ClusterMark';
+import PopCard from './PopCard';
 import { getQueryString, getPosition, getBikeStation } from '../utils';
 
 const OpenStreetMap = styled('div')(({ theme }) => ({
@@ -51,6 +52,10 @@ const BikeIcon = (quantity: number) => {
   });
 };
 
+const PopUp = () => {
+  const asd = L.popup({ pane: 'none' });
+};
+
 const Map = () => {
   // router
   const location = useLocation();
@@ -63,6 +68,7 @@ const Map = () => {
 
   // map state
   const mapRef = useRef<L.Map>();
+  const bikeMarkRef = useRef<L.MarkerClusterGroup>();
 
   // map first render
   useEffect(() => {
@@ -91,10 +97,15 @@ const Map = () => {
       getBikeStation(res.coords.latitude, res.coords.longitude).then((res) => {
         res.forEach((ele) => {
           markers.addLayer(
-            L.marker([ele.lat, ele.lng], { icon: BikeIcon(16) }),
+            L.marker([ele.lat, ele.lng], {
+              icon: BikeIcon(ele.rentBike),
+            }).bindPopup(renderToString(<PopCard {...ele} />), {
+              className: 'cus-popup',
+            }),
           );
         });
       });
+      bikeMarkRef.current = markers;
       map.addLayer(markers);
     });
 
@@ -125,6 +136,12 @@ const Map = () => {
     mapRef.current = map;
   }, []);
 
+  const handleClickSearch = () => {
+    if (mapRef.current && bikeMarkRef.current) {
+      mapRef.current.removeLayer(bikeMarkRef.current);
+    }
+  };
+
   return (
     <>
       <Box
@@ -133,9 +150,10 @@ const Map = () => {
           left: '50%',
           bottom: '5%',
           transform: 'translateX(-50%)',
+          zIndex: 1,
         }}
       >
-        <Button variant="contained" size="large">
+        <Button variant="contained" size="large" onClick={handleClickSearch}>
           搜尋此區域
         </Button>
       </Box>

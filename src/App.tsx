@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './views/Home';
+import Test from './views/Test';
 
 const Container = styled('div')`
   width: 100vw;
@@ -22,6 +23,7 @@ const App = () => {
       <Page>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </Page>
     </Container>

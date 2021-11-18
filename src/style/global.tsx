@@ -127,6 +127,7 @@ const global = css`
 
   html,
   body {
+    font-family: 'Noto Sans TC';
   }
 
   *,
