@@ -48,12 +48,9 @@ const BikeIcon = (quantity: number) => {
     className: 'bike-icon',
     iconSize: [48, 67],
     iconAnchor: [19, 28.5],
+    popupAnchor: [-175, -135],
     html: renderToString(<BikeMark quantity={quantity} />),
   });
-};
-
-const PopUp = () => {
-  const asd = L.popup({ pane: 'none' });
 };
 
 const Map = () => {
