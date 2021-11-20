@@ -1,32 +1,38 @@
 import { styled } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
-import Home from './views/Home';
-import Test from './views/Test';
-
-const Container = styled('div')`
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-`;
+import SideBar from './views/Sidebar';
+import ErrorPage from './views/ErrorPage';
+import Station from './views/Station';
+import Bike from './views/Bike';
+import Attraction from './views/Attractions';
+import ErrorNestRoute from './views/ErrorNestRoute';
+import Map from './components/Map';
 
 const Page = styled('section')`
   position: relative;
+  width: 100vw;
   height: calc(100vh - 76px);
+  overflow: hidden;
 `;
 
 const App = () => {
   return (
-    <Container>
+    <>
       <Header />
       <Page>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />} />
+          <Route path="map" element={<SideBar />}>
+            <Route index element={<ErrorNestRoute />} />
+            <Route path="station" element={<Station />} />
+            <Route path="bike" element={<Bike />} />
+            <Route path="attraction" element={<Attraction />} />
+          </Route>
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
+        <Map />
       </Page>
-    </Container>
+    </>
   );
 };
 

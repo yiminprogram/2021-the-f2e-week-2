@@ -67,20 +67,19 @@ const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          color: primary.main,
-          boxShadow: 'none',
-        },
-        contained: {
-          backgroundColor: '#ffffff',
-          border: '1px solid #A4B375',
-          borderRadius: '8px',
-
-          '&:hover': {
-            boxShadow: 'none',
-            backgroundColor: primary.light,
-          },
-        },
+        // root: {
+        //   color: primary.main,
+        //   boxShadow: 'none',
+        // },
+        // contained: {
+        //   backgroundColor: '#ffffff',
+        //   border: '1px solid #A4B375',
+        //   borderRadius: '8px',
+        //   '&:hover': {
+        //     boxShadow: 'none',
+        //     backgroundColor: primary.light,
+        //   },
+        // },
       },
     },
   },

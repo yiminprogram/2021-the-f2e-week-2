@@ -1,12 +1,6 @@
 import axios from 'axios';
 import { getAuthorizationHeader } from '../utils';
 
-const STATION_URL =
-  'https://ptx.transportdata.tw/MOTC/v2/Bike/Station/NearBy?$spatialFilter=nearby(25.032761%2C%20121.5624321%2C%201000)&$format=JSON';
-
-const INFO_URL =
-  'https://ptx.transportdata.tw/MOTC/v2/Bike/Availability/NearBy?$spatialFilter=nearby(25.032761%2C%20121.5624321%2C%201000)&$format=JSON';
-
 type TBikeData = {
   name: string;
   lat: number;

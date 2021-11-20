@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { styled, Box, Button } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Box, Fab } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet/dist/leaflet.css';
@@ -11,24 +11,9 @@ import UserMark from '../components/UserMark';
 import BikeMark from '../components/BikeMark';
 import ClusterMark from './ClusterMark';
 import PopCard from './PopCard';
-import { getQueryString, getPosition, getBikeStation } from '../utils';
-
-const OpenStreetMap = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  width: '120%',
-  height: '100%',
-  left: 0,
-  opacity: '1',
-  zIndex: 0,
-
-  [theme.breakpoints.up('xs')]: {
-    width: '100%',
-  },
-
-  [theme.breakpoints.up('lg')]: {
-    width: '110%',
-  },
-}));
+import { getQueryString, getUserPosition, getBikeStation } from '../utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 // map setting
 const OSMUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -61,7 +46,6 @@ const Map = () => {
   // search string
   const lat = Number(new URLSearchParams(location.search).get('lat'));
   const lng = Number(new URLSearchParams(location.search).get('lng'));
-  const zoom = Number(new URLSearchParams(location.search).get('zoom'));
 
   // map state
   const mapRef = useRef<L.Map>();
@@ -73,38 +57,44 @@ const Map = () => {
     const map = L.map('map', { zoomControl: false });
     L.tileLayer(OSMUrl, { attribution }).addTo(map);
     map.setZoom(17);
-    getPosition().then((res) => {
-      map.setView([res.coords.latitude, res.coords.longitude], 17);
-      L.marker([res.coords.latitude, res.coords.longitude], {
-        icon: UserIcon,
-      }).addTo(map);
-      // Bike station marker
-      const markers = L.markerClusterGroup({
-        iconCreateFunction: (cluster) => {
-          return L.divIcon({
-            className: 'cluster-icon',
-            iconSize: [30, 30],
-            iconAnchor: [15, 15],
-            html: renderToString(
-              <ClusterMark count={cluster.getChildCount()} />,
-            ),
-          });
-        },
-      });
-      getBikeStation(res.coords.latitude, res.coords.longitude).then((res) => {
-        res.forEach((ele) => {
-          markers.addLayer(
-            L.marker([ele.lat, ele.lng], {
-              icon: BikeIcon(ele.rentBike),
-            }).bindPopup(renderToString(<PopCard {...ele} />), {
-              className: 'cus-popup',
-            }),
-          );
+    getUserPosition()
+      .then((res) => {
+        map.setView([res.coords.latitude, res.coords.longitude], 15);
+        L.marker([res.coords.latitude, res.coords.longitude], {
+          icon: UserIcon,
+        }).addTo(map);
+        // Bike station marker
+        const markers = L.markerClusterGroup({
+          iconCreateFunction: (cluster) => {
+            return L.divIcon({
+              className: 'cluster-icon',
+              iconSize: [30, 30],
+              iconAnchor: [15, 15],
+              html: renderToString(
+                <ClusterMark count={cluster.getChildCount()} />,
+              ),
+            });
+          },
         });
+        getBikeStation(res.coords.latitude, res.coords.longitude).then(
+          (res) => {
+            res.forEach((ele) => {
+              markers.addLayer(
+                L.marker([ele.lat, ele.lng], {
+                  icon: BikeIcon(ele.rentBike),
+                }).bindPopup(renderToString(<PopCard {...ele} />), {
+                  className: 'cus-popup',
+                }),
+              );
+            });
+          },
+        );
+        bikeMarkRef.current = markers;
+        map.addLayer(markers);
+      })
+      .catch(() => {
+        // console.log('no open gps');
       });
-      bikeMarkRef.current = markers;
-      map.addLayer(markers);
-    });
 
     // get map center position
     const getMapCenter = () => {
@@ -113,7 +103,6 @@ const Map = () => {
           search: getQueryString({
             lat: map.getCenter().lat,
             lng: map.getCenter().lng,
-            zoom: map.getZoom(),
           }),
         });
       }, 500);
@@ -131,30 +120,40 @@ const Map = () => {
     });
 
     mapRef.current = map;
-  }, []);
+  }, [navigation]);
 
-  const handleClickSearch = () => {
-    if (mapRef.current && bikeMarkRef.current) {
-      mapRef.current.removeLayer(bikeMarkRef.current);
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setView([lat, lng]);
     }
-  };
+
+    if (location.state && location.state.search) {
+      console.log('get query');
+    }
+  }, [lat, lng]);
 
   return (
     <>
       <Box
+        id="map"
         sx={{
-          position: 'absolute',
-          left: '50%',
-          bottom: '5%',
-          transform: 'translateX(-50%)',
-          zIndex: 1,
+          position: 'relative',
+          width: {
+            xs: '100%',
+            lg: '120%',
+          },
+          height: '100%',
+          left: 0,
+          top: 0,
+          zIndex: 0,
         }}
-      >
-        <Button variant="contained" size="large" onClick={handleClickSearch}>
+      ></Box>
+      <Box>
+        <Fab>
+          <FontAwesomeIcon icon={faSearch} />
           搜尋此區域
-        </Button>
+        </Fab>
       </Box>
-      <OpenStreetMap id="map"></OpenStreetMap>{' '}
     </>
   );
 };
