@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.js": "/2021-the-f2e-week-2/static/js/main.bf4b378f.chunk.js",
-    "main.js.map": "/2021-the-f2e-week-2/static/js/main.bf4b378f.chunk.js.map",
-    "runtime-main.js": "/2021-the-f2e-week-2/static/js/runtime-main.b3541fad.js",
-    "runtime-main.js.map": "/2021-the-f2e-week-2/static/js/runtime-main.b3541fad.js.map",
-    "static/css/2.9d0e2f0d.chunk.css": "/2021-the-f2e-week-2/static/css/2.9d0e2f0d.chunk.css",
-    "static/js/2.15294c99.chunk.js": "/2021-the-f2e-week-2/static/js/2.15294c99.chunk.js",
-    "static/js/2.15294c99.chunk.js.map": "/2021-the-f2e-week-2/static/js/2.15294c99.chunk.js.map",
-    "index.html": "/2021-the-f2e-week-2/index.html",
-    "static/css/2.9d0e2f0d.chunk.css.map": "/2021-the-f2e-week-2/static/css/2.9d0e2f0d.chunk.css.map",
-    "static/js/2.15294c99.chunk.js.LICENSE.txt": "/2021-the-f2e-week-2/static/js/2.15294c99.chunk.js.LICENSE.txt",
-    "static/media/404.646d6db6.svg": "/2021-the-f2e-week-2/static/media/404.646d6db6.svg",
-    "static/media/logo-light.0c6a71ad.svg": "/2021-the-f2e-week-2/static/media/logo-light.0c6a71ad.svg"
+    "main.js": "/2021-the-f2e-week-2/map/station/static/js/main.bf4b378f.chunk.js",
+    "main.js.map": "/2021-the-f2e-week-2/map/station/static/js/main.bf4b378f.chunk.js.map",
+    "runtime-main.js": "/2021-the-f2e-week-2/map/station/static/js/runtime-main.f5655be1.js",
+    "runtime-main.js.map": "/2021-the-f2e-week-2/map/station/static/js/runtime-main.f5655be1.js.map",
+    "static/css/2.9d0e2f0d.chunk.css": "/2021-the-f2e-week-2/map/station/static/css/2.9d0e2f0d.chunk.css",
+    "static/js/2.15294c99.chunk.js": "/2021-the-f2e-week-2/map/station/static/js/2.15294c99.chunk.js",
+    "static/js/2.15294c99.chunk.js.map": "/2021-the-f2e-week-2/map/station/static/js/2.15294c99.chunk.js.map",
+    "index.html": "/2021-the-f2e-week-2/map/station/index.html",
+    "static/css/2.9d0e2f0d.chunk.css.map": "/2021-the-f2e-week-2/map/station/static/css/2.9d0e2f0d.chunk.css.map",
+    "static/js/2.15294c99.chunk.js.LICENSE.txt": "/2021-the-f2e-week-2/map/station/static/js/2.15294c99.chunk.js.LICENSE.txt",
+    "static/media/404.646d6db6.svg": "/2021-the-f2e-week-2/map/station/static/media/404.646d6db6.svg",
+    "static/media/logo-light.0c6a71ad.svg": "/2021-the-f2e-week-2/map/station/static/media/logo-light.0c6a71ad.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.b3541fad.js",
+    "static/js/runtime-main.f5655be1.js",
     "static/css/2.9d0e2f0d.chunk.css",
     "static/js/2.15294c99.chunk.js",
     "static/js/main.bf4b378f.chunk.js"
