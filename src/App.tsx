@@ -6,7 +6,6 @@ import ErrorPage from './views/ErrorPage';
 import Station from './views/Station';
 import Bike from './views/Bike';
 import Attraction from './views/Attractions';
-import ErrorNestRoute from './views/ErrorNestRoute';
 import Map from './components/Map';
 
 const Page = styled('section')`
@@ -22,8 +21,8 @@ const App = () => {
       <Header />
       <Page>
         <Routes>
-          <Route path="map" element={<SideBar />}>
-            <Route index element={<ErrorNestRoute />} />
+          <Route path="/" element={<SideBar />}>
+            <Route path="/" element={<Station />} />
             <Route path="station" element={<Station />} />
             <Route path="bike" element={<Bike />} />
             <Route path="attraction" element={<Attraction />} />

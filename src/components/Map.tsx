@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Box, Fab } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -40,12 +40,12 @@ const BikeIcon = (quantity: number) => {
 
 const Map = () => {
   // router
-  const location = useLocation();
+  // const location = useLocation();
   const navigation = useNavigate();
 
   // search string
-  const lat = Number(new URLSearchParams(location.search).get('lat'));
-  const lng = Number(new URLSearchParams(location.search).get('lng'));
+  // const lat = Number(new URLSearchParams(location.search).get('lat'));
+  // const lng = Number(new URLSearchParams(location.search).get('lng'));
 
   // map state
   const mapRef = useRef<L.Map>();
@@ -56,7 +56,7 @@ const Map = () => {
     // leaflet create map (current position)
     const map = L.map('map', { zoomControl: false });
     L.tileLayer(OSMUrl, { attribution }).addTo(map);
-    map.setZoom(17);
+    map.setZoom(15);
     getUserPosition()
       .then((res) => {
         map.setView([res.coords.latitude, res.coords.longitude], 15);
@@ -121,16 +121,6 @@ const Map = () => {
 
     mapRef.current = map;
   }, [navigation]);
-
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setView([lat, lng]);
-    }
-
-    if (location.state && location.state.search) {
-      console.log('get query');
-    }
-  }, [lat, lng]);
 
   return (
     <>
