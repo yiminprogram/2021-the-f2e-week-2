@@ -21,8 +21,8 @@ const App = () => {
       <Header />
       <Page>
         <Routes>
-          <Route path="/" element={<SideBar />}>
-            <Route path="/" element={<Station />} />
+          <Route path="map" element={<SideBar />}>
+            <Route index element={<Station />} />
             <Route path="station" element={<Station />} />
             <Route path="bike" element={<Bike />} />
             <Route path="attraction" element={<Attraction />} />
