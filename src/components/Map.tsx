@@ -120,7 +120,7 @@ const Map = () => {
     });
 
     mapRef.current = map;
-  }, [navigation]);
+  }, []);
 
   return (
     <>
