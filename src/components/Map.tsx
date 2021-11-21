@@ -93,7 +93,7 @@ const Map = () => {
         map.addLayer(markers);
       })
       .catch(() => {
-        // console.log('no open gps');
+        console.log('no open gps');
       });
 
     // get map center position
