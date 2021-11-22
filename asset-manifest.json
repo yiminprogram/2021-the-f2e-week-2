@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/2021-the-f2e-week-2/static/js/main.1c16052b.chunk.js",
-    "main.js.map": "/2021-the-f2e-week-2/static/js/main.1c16052b.chunk.js.map",
+    "main.js": "/2021-the-f2e-week-2/static/js/main.969f42c1.chunk.js",
+    "main.js.map": "/2021-the-f2e-week-2/static/js/main.969f42c1.chunk.js.map",
     "runtime-main.js": "/2021-the-f2e-week-2/static/js/runtime-main.b3541fad.js",
     "runtime-main.js.map": "/2021-the-f2e-week-2/static/js/runtime-main.b3541fad.js.map",
     "static/css/2.3276ac27.chunk.css": "/2021-the-f2e-week-2/static/css/2.3276ac27.chunk.css",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.b3541fad.js",
     "static/css/2.3276ac27.chunk.css",
     "static/js/2.3bb6375b.chunk.js",
-    "static/js/main.1c16052b.chunk.js"
+    "static/js/main.969f42c1.chunk.js"
   ]
 }
