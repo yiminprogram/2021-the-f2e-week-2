@@ -82,7 +82,7 @@ const Home = ({ handleData }: TProps) => {
         lng: 121.5689479334554,
       }),
     });
-    getStation({ city: 'Taipei', query }).then((res) => {
+    getStation({ city, query }).then((res) => {
       handleData('station', res);
       setData(res);
     });
@@ -136,6 +136,7 @@ const Home = ({ handleData }: TProps) => {
             placeholder="地址或站名搜尋"
             sx={{ color: 'primary.main', flex: 2, px: 2 }}
             value={query}
+            required
             onChange={(e) => setQuery(e.target.value)}
           />
           <IconButton type="submit" color="primary">
