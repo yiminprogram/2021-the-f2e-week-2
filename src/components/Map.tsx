@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Fab } from '@mui/material';
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -11,7 +11,7 @@ import UserMark from '../components/UserMark';
 import BikeMark from '../components/BikeMark';
 import ClusterMark from './ClusterMark';
 import PopCard from './PopCard';
-import { getQueryString, getUserPosition, getBikeStation } from '../utils';
+import { getQueryString, getUserPosition, getNearByStation } from '../utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
@@ -38,62 +38,93 @@ const BikeIcon = (quantity: number) => {
   });
 };
 
-const Map = () => {
+type TBikeData = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  rentBike: number;
+  returnBike: number;
+  time: string;
+  status: number;
+};
+
+type TProps = {
+  data: TBikeData[] | null;
+};
+
+const Map = ({ data }: TProps) => {
   // router
-  // const location = useLocation();
+  const location = useLocation();
   const navigation = useNavigate();
 
   // search string
-  // const lat = Number(new URLSearchParams(location.search).get('lat'));
-  // const lng = Number(new URLSearchParams(location.search).get('lng'));
+  const lat = Number(new URLSearchParams(location.search).get('lat'));
+  const lng = Number(new URLSearchParams(location.search).get('lng'));
 
   // map state
   const mapRef = useRef<L.Map>();
-  const bikeMarkRef = useRef<L.MarkerClusterGroup>();
+  const bikeMarkGroupRef = useRef<L.MarkerClusterGroup>();
+  const bikeMarkRef = useRef<L.Marker<any>[]>([]);
 
   // map first render
   useEffect(() => {
-    // leaflet create map (current position)
-    const map = L.map('map', { zoomControl: false });
+    // init map
+    const map = L.map('map', { zoomControl: false }).setZoom(15);
     L.tileLayer(OSMUrl, { attribution }).addTo(map);
-    map.setZoom(15);
-    getUserPosition()
-      .then((res) => {
-        map.setView([res.coords.latitude, res.coords.longitude], 15);
-        L.marker([res.coords.latitude, res.coords.longitude], {
+
+    // set user position & mark
+    const setUserPosition = (lat: number, lng: number, user: boolean) => {
+      map.setView([lat, lng], 15);
+      if (user) {
+        L.marker([lat, lng], {
           icon: UserIcon,
         }).addTo(map);
-        // Bike station marker
-        const markers = L.markerClusterGroup({
-          iconCreateFunction: (cluster) => {
-            return L.divIcon({
-              className: 'cluster-icon',
-              iconSize: [30, 30],
-              iconAnchor: [15, 15],
-              html: renderToString(
-                <ClusterMark count={cluster.getChildCount()} />,
-              ),
-            });
-          },
+      }
+    };
+
+    // get nearby station & set mark
+    const setStation = (lat: number, lng: number) => {
+      // defined markers cluster
+      const markers = L.markerClusterGroup({
+        iconCreateFunction: (cluster) => {
+          return L.divIcon({
+            className: 'cluster-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+            html: renderToString(
+              <ClusterMark count={cluster.getChildCount()} />,
+            ),
+          });
+        },
+      });
+
+      // fetch bike station
+      getNearByStation(lat, lng).then((res) => {
+        res.forEach((ele) => {
+          markers.addLayer(
+            L.marker([ele.lat, ele.lng], {
+              icon: BikeIcon(ele.rentBike),
+            }).bindPopup(renderToString(<PopCard {...ele} />), {
+              className: 'cus-popup',
+            }),
+          );
         });
-        getBikeStation(res.coords.latitude, res.coords.longitude).then(
-          (res) => {
-            res.forEach((ele) => {
-              markers.addLayer(
-                L.marker([ele.lat, ele.lng], {
-                  icon: BikeIcon(ele.rentBike),
-                }).bindPopup(renderToString(<PopCard {...ele} />), {
-                  className: 'cus-popup',
-                }),
-              );
-            });
-          },
-        );
-        bikeMarkRef.current = markers;
-        map.addLayer(markers);
+      });
+      bikeMarkGroupRef.current = markers;
+      map.addLayer(markers);
+    };
+
+    getUserPosition()
+      .then((res) => {
+        // client gps open
+        setUserPosition(res.coords.latitude, res.coords.longitude, true);
       })
       .catch(() => {
-        console.log('no open gps');
+        // client gps close
+        const lat = 25.0333836;
+        const lng = 121.5633739;
+        setUserPosition(lat, lng, false);
       });
 
     // get map center position
@@ -121,6 +152,53 @@ const Map = () => {
 
     mapRef.current = map;
   }, []);
+
+  useEffect(() => {
+    if (!data) return;
+    if (mapRef.current && bikeMarkGroupRef.current) {
+      mapRef.current.removeLayer(bikeMarkGroupRef.current);
+    }
+    if (mapRef.current) {
+      const markers = L.markerClusterGroup({
+        iconCreateFunction: (cluster) => {
+          return L.divIcon({
+            className: 'cluster-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+            html: renderToString(
+              <ClusterMark count={cluster.getChildCount()} />,
+            ),
+          });
+        },
+      });
+
+      const markerArr: L.Marker<any>[] = [];
+
+      data.forEach((ele) => {
+        const mark = L.marker([ele.lat, ele.lng], {
+          icon: BikeIcon(ele.rentBike),
+        }).bindPopup(renderToString(<PopCard {...ele} />), {
+          className: 'cus-popup',
+        });
+        markers.addLayer(mark);
+        markerArr.push(mark);
+      });
+      bikeMarkRef.current = markerArr;
+      bikeMarkGroupRef.current = markers;
+      mapRef.current.addLayer(markers);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (mapRef.current && location.state && location.state.search) {
+      bikeMarkRef.current.forEach((ele) => {
+        if (ele.getLatLng().lat === lat) {
+          ele.openPopup();
+        }
+      });
+      mapRef.current.setView([lat, lng], 20);
+    }
+  }, [lat, lng, location]);
 
   return (
     <>

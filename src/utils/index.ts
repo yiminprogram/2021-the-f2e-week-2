@@ -1,4 +1,5 @@
 export * from './getUserPosition';
 export * from './getQueryString';
-export * from './getBikeStation';
+export * from './getNearByStation';
 export * from './getAuthorizationHeader';
+export * from './getStation';

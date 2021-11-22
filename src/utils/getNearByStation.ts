@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAuthorizationHeader } from '../utils';
+import { getAuthorizationHeader } from '.';
 
 type TBikeData = {
   name: string;
@@ -36,7 +36,7 @@ const getUrl = (curLat: number, curLng: number) => {
   };
 };
 
-export const getBikeStation = (
+export const getNearByStation = (
   curLat: number,
   curLng: number,
 ): Promise<TBikeData[]> => {
@@ -51,8 +51,6 @@ export const getBikeStation = (
     ])
     .then(
       axios.spread((station, info) => {
-        console.log(station);
-        console.log(info);
         return station.data.map((ele: TRemoteStation) => ({
           name: ele.StationName.Zh_tw,
           lat: ele.StationPosition.PositionLat,

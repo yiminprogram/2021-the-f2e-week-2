@@ -1,0 +1,13 @@
+[
+  { "id": "臺中市", "value": "Taichung" },
+  { "id": "新竹市", "value": "Hsinchu" },
+  { "id": "苗栗縣", "value": "MiaoliCounty" },
+  { "id": "新北市", "value": "NewTaipei" },
+  { "id": "屏東縣", "value": "PingtungCounty" },
+  { "id": "金門縣", "value": "KinmenCounty" },
+  { "id": "桃園市", "value": "Taoyuan" },
+  { "id": "臺北市", "value": "Taipei" },
+  { "id": "高雄市", "value": "Kaohsiung" },
+  { "id": "臺南市", "value": "Tainan" },
+  { "id": "嘉義市", "value": "Chiayi" }
+]

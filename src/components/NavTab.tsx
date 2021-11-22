@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Tabs, Tab } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -8,10 +9,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 const NavTab = () => {
+  const navigation = useNavigate();
   const [value, setValue] = useState('station');
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
+    navigation({ pathname: newValue });
   };
 
   return (

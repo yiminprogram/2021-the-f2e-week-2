@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   Typography,
   Stack,
@@ -14,16 +15,43 @@ import {
   faParking,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import { getQueryString } from '../utils/getQueryString';
 
-const StationCard = () => {
+type TProps = {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  rentBike: number;
+  returnBike: number;
+  time: string;
+  status: number;
+};
+
+const StationCard = ({
+  name,
+  lat,
+  lng,
+  rentBike,
+  returnBike,
+  time,
+  status,
+}: TProps) => {
+  const navigation = useNavigate();
+  const handleClick = () => {
+    navigation(
+      { search: getQueryString({ lat, lng }) },
+      { state: { search: true } },
+    );
+  };
   return (
     <>
       <ListItem>
-        <Card sx={{ width: '100%', boxShadow: 'none' }}>
+        <Card sx={{ width: '100%', boxShadow: 'none' }} onClick={handleClick}>
           <CardActionArea sx={{ color: 'primary.main' }}>
             <CardContent sx={{ py: 1 }}>
               <Typography variant="h5" color="primary" sx={{ mb: 2 }}>
-                太原廣場
+                {name}
               </Typography>
               <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
                 <Box
@@ -40,7 +68,7 @@ const StationCard = () => {
                     可租借
                   </Typography>
                   <Typography variant="body1" color="primary.dark">
-                    43
+                    {rentBike}
                   </Typography>
                 </Box>
                 <Box
@@ -57,7 +85,7 @@ const StationCard = () => {
                     可還車
                   </Typography>
                   <Typography variant="body1" color="error.dark">
-                    15
+                    {returnBike}
                   </Typography>
                 </Box>
               </Stack>
@@ -80,7 +108,7 @@ const StationCard = () => {
                 </Typography>
                 <Typography variant="body1" color="primary.main">
                   <FontAwesomeIcon icon={faCheckCircle} fixedWidth />
-                  正常營運
+                  {status === 1 ? '正常營運' : '暫停營運'}
                 </Typography>
               </Stack>
             </CardContent>

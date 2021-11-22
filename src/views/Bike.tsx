@@ -1,5 +1,23 @@
+import fix from '../assets/image/fix.svg';
+import styled from '@emotion/styled';
+
+const Image = styled.div`
+  padding: 3rem;
+
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+`;
 const Bike = () => {
-  return <div>自行車路線建置中</div>;
+  return (
+    <div>
+      <Image>
+        <img src={fix} alt="fix" />
+      </Image>
+    </div>
+  );
 };
 
 export default Bike;
